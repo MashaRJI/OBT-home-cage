@@ -17,24 +17,20 @@ void loop() {
   // put your main code here, to run repeatedly:
 nose = analogRead(sensorPin);
 
-if (nose == True) {
+noseCount = 0
+while (nose == True) {
   if (noseCount == 0){
-  digitalWrite (buzzPin, HIGH);
-  delay(dt);
-  digitalWrite (buzzPin, LOW);
+    digitalWrite (buzzPin, HIGH);
+    delay(dt);
+    digitalWrite (buzzPin, LOW);
   }
-  delay(dt);
-  noseCount++;
-  if (nose == True){
-    continue;
+  while (noseCount < rewardCount){
+    noseCount++
+    delay(dt);
   }
   else {
     if (noseCount >= rewardCount){
       // give the reward
-      noseCount = 0;
-      return;
-    } else {
-      noseCount = 0
       return;
     }
   }
