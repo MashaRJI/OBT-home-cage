@@ -18,10 +18,13 @@ void loop() {
 nose = analogRead(sensorPin);
 
 if (nose == True) {
+  if (noseCount == 0){
   digitalWrite (buzzPin, HIGH);
-  noseCount++;
   delay(dt);
   digitalWrite (buzzPin, LOW);
+  }
+  delay(dt);
+  noseCount++;
   if (nose == True){
     continue;
   }
