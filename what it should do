@@ -1,0 +1,12 @@
+While mouse here:
+  If count == 0:
+    buzz
+  while count < threshold:
+    count += 1
+    wait
+  if count >= threshold:
+    reward
+    count = 0
+    break
+No mouse:
+  count = 0
