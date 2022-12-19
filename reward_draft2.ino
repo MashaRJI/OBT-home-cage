@@ -1,6 +1,6 @@
 int nose;
 int buzzPin = 8;
-int sensorPin = ???;
+int sensorPin = 10;
 int noseCount = 0
 int dt = 100
 int rewardCount = 10
@@ -18,8 +18,10 @@ void loop() {
 nose = analogRead(sensorPin);
 
 if (nose == True) {
+  digitalWrite (buzzPin, HIGH);
   noseCount++;
   delay(dt);
+  digitalWrite (buzzPin, LOW);
   if (nose == True){
     continue;
   }
