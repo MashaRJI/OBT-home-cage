@@ -4,6 +4,8 @@ int sensorPin = 10;
 int noseCount = 0;
 int dt = 100;
 int rewardCount = 200;
+int buzzTime = 500;
+int ledTime = 500;
 
 
 
@@ -32,11 +34,12 @@ if (nose == 1) {
     noseCount++;
     Serial.println(noseCount);
     delay(dt);
+    nose = digitalRead(sensorPin);
   }
   if (noseCount >= rewardCount){
       // give the reward
       digitalWrite(13, HIGH);
-      delay(1000);
+      delay(ledTime);
       digitalWrite(13, LOW);
     }
   while (nose == 1) { 
