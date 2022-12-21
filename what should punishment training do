@@ -1,0 +1,7 @@
+If there is a mouse:
+play tone B
+wait x ms
+If the mouse is absent for X seconds:
+  do nothing
+If the mouse was there for some time:
+  do the punishment (test: led)
