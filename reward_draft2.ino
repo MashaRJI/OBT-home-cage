@@ -1,11 +1,18 @@
-int nose;
-int buzzPin = 8;
-int sensorPin = 10;
-int noseCount = 0;
-int dt = 100;
-int rewardCount = 200;
-int buzzTime = 500;
-int ledTime = 500;
+enum {
+  NO_MOUSE, DETECTED, WAITING, //REWARD as a case?
+  };
+unsigned char sensorState;
+
+bool isReward = TRUE;
+const int sensorPin = 2;
+const int buzzPin = 8;
+const int ledPin = 13;
+volatile int mouseFlag;
+
+const int mouseTime = 3000;
+const int buzzTime = 1000;
+unsigned long prevMillis = 0;
+unsigned long crntMillis = 0; //start, end millis better?
 
 
 
@@ -13,37 +20,54 @@ void setup() {
   // put your setup code here, to run once:
 pinMode(buzzPin, OUTPUT);
 pinMode(sensorPin, INPUT);
-pinMode(13, OUTPUT);
+pinMode(ledPin, OUTPUT);
 Serial.begin(9600);
-}
 
+attachInterrupt(digitalPinToInterrupt(sensorPin), ISR_mouse, RISING);
+}
 
 
 void loop() {
   // put your main code here, to run repeatedly:
-nose = digitalRead(sensorPin);
+switch (sensorState) {
+  case NO_MOUSE:
+    Serial.println('no mouse');
+    
+    if (mouseFlag) { //mouse appeared, isr run
+      prevMillis = millis();
+      digitalWrite(buzzPin, HIGH);
+      sensorState = WAITING;
+      break;
 
-noseCount = 0;
-if (nose == 1) {
-  if (noseCount == 0){
-    digitalWrite (buzzPin, HIGH);
-    delay(dt);
-    digitalWrite (buzzPin, LOW);
-  }
-  while ((noseCount < rewardCount) && (nose == 1)){
-    noseCount++;
-    Serial.println(noseCount);
-    delay(dt);
-    nose = digitalRead(sensorPin);
-  }
-  if (noseCount >= rewardCount){
-      // give the reward
-      digitalWrite(13, HIGH);
-      delay(ledTime);
-      digitalWrite(13, LOW);
+    } else { //as in the reference, but is it necessary?
+      break;
     }
-  while (nose == 1) { 
-    nose = digitalRead(sensorPin);
-  }
-  }
+  
+  case WAITING:
+    Serial.println('waiting');
+    if ( millis() - prevMillis > buzzTime ){
+      digitalWrite(buzzPin, LOW);
+    }
+    if ( digitalRead(sensorPin == 0) ){
+      crntMillis = millis();
+      if ( prevMillis - crntMillis >= mouseTime ) {
+        Serial.println('reward');
+        digitalWrite(ledPin, HIGH);
+        //sweet water valve
+      }
+      mouseFlag = 0;
+      sensorState = NO_MOUSE;
+      break;
+    }
+    } 
+  
+  case REWARD: 
+    // open the valve
+
+}
+}
+
+
+void ISR_mouse() {
+  mouseFlag = 1; //or mouseState = DETECTED
 }
